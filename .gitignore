@@ -218,3 +218,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Generated Week 1 data, database, and model artifacts
+data/supplyprescript.db
+data/supplyprescript.db-journal
+ml/artifacts/

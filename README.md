@@ -101,95 +101,77 @@ The final decision remains subject to business requirements and user approval.
 ```text
 SupplyPrescript-Closed-Loop-Analytics/
 ├── backend/
-│   ├── main.py
-│   ├── routes/
-│   └── services/
-├── frontend/
+│   └── main.py
 ├── ml/
-│   ├── preprocessing.py
-│   ├── train_model.py
-│   └── predict.py
-├── optimization/
-│   └── optimizer.py
-├── data/
-├── notebooks/
+│   ├── data.py
+│   └── train_model.py
+├── data/                 # Generated sample CSV and local SQLite database
 ├── tests/
-├── .gitignore
+│   └── test_week_one.py
 ├── requirements.txt
 └── README.md
 ```
 
-*The structure is a proposed starting point and may change as development progresses.*
+The initial implementation uses FastAPI and SQLite as a local foundation; PostgreSQL and a separate React frontend remain possible future replacements as the product grows.
 
 ## Getting Started
 
 ### Prerequisites
 
-- Python 3.11 or a compatible version.
-- Node.js and npm, if using the Next.js frontend.
-- PostgreSQL, if database integration is enabled.
+- Python 3.11.
 - Git.
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/SupplyPrescript-Closed-Loop-Analytics.git
-cd SupplyPrescript-Closed-Loop-Analytics
-```
-
-Replace `YOUR_USERNAME` with your GitHub username.
-
-### 2. Create a Python virtual environment
+### 1. Install dependencies
 
 ```bash
 python -m venv .venv
 ```
 
-Activate it on Windows:
+Activate the environment, then install the pinned dependencies:
 
 ```powershell
 .venv\Scripts\Activate.ps1
-```
-
-Or on macOS/Linux:
-
-```bash
-source .venv/bin/activate
-```
-
-### 3. Install Python dependencies
-
-Once `requirements.txt` has been created:
-
-```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run the backend
+On macOS/Linux, activate it with:
 
-After the FastAPI application has been implemented:
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Generate data and train the baseline
+
+The command below creates a reproducible 600-row fictional shipment dataset at `data/sample_shipments.csv`, cleans and labels it, evaluates an XGBoost classifier using a stratified 75/25 train/test split, and saves the model and metrics under `ml/artifacts/`.
+
+```bash
+python -m ml.train_model
+```
+
+Features include supplier, product, order and promised dates, shipping method and cost, and weather, port, and supplier disruption indicators. The delay target is derived from actual versus promised delivery dates; actual outcomes are excluded from model inputs.
+
+Metrics include accuracy, precision, recall, F1, ROC AUC, and the dataset's delay rate. `random_state=42` keeps data generation and evaluation reproducible. On the generated 600-row sample, the baseline held-out metrics were accuracy **0.76**, precision **0.4737**, recall **0.2571**, F1 **0.3333**, and ROC AUC **0.6976**. This is an initial benchmark, not a production-ready model.
+
+### 3. Start the application
 
 ```bash
 uvicorn backend.main:app --reload
 ```
 
-The API documentation will typically be available at:
+Open `http://127.0.0.1:8000/` for the shipment lookup page. Enter an ID such as `SP-00001` to view shipment details and its predicted delay probability. The API is documented at:
 
 `http://127.0.0.1:8000/docs`
 
-### 5. Run the frontend
+The API also provides `GET /api/shipments` and `GET /api/shipments/{shipment_id}`. SQLite creates `data/supplyprescript.db` and imports the generated shipment records at startup. Set `SUPPLYPRESCRIPT_DB` to use a different database file.
 
-After the frontend has been created:
+### 4. Run focused tests
 
 ```bash
-cd frontend
-npm install
-npm run dev
+pytest -q
 ```
 
-Open `http://localhost:3000` in your browser.
-
-*These commands assume the proposed files and application entry points exist. They will need adjustment if your implementation uses a different structure.*
+Generated data, model artifacts, and the local database are runtime outputs; delete them to recreate the sample and model from scratch.
 
 ## Evaluation Metrics
 
@@ -212,16 +194,15 @@ The project will evaluate predictive and operational performance using suitable 
 
 ## Development Roadmap
 
-- [ ] Collect or generate sample supply chain data.
-- [ ] Clean data and perform exploratory analysis.
-- [ ] Train and evaluate the shipment-delay prediction model.
+- [x] Generate and clean reproducible sample supply-chain data.
+- [x] Train and evaluate a baseline shipment-delay classifier.
+- [x] Add local persistence, API endpoints, and an individual shipment lookup.
 - [ ] Develop the optimization engine.
-- [ ] Build the FastAPI backend.
 - [ ] Integrate PostgreSQL for decisions and outcomes.
 - [ ] Create the interactive dashboard.
 - [ ] Implement decision tracking and outcome evaluation.
 - [ ] Test the complete workflow.
-- [ ] Document results and deployment instructions.
+- [x] Document the Week 1 workflow and local run instructions.
 
 ## Collaboration
 
