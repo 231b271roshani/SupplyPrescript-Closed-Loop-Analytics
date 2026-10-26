@@ -2,13 +2,14 @@
 
 An ML-powered supply chain decision-support system that predicts shipment delays, recommends cost-effective actions, and evaluates real-world outcomes to improve future decisions.
 
-## Overview
+##Overview
 
 Traditional predictive analytics tells businesses what might happen, but it does not always explain what action they should take.
 
 **SupplyPrescript** aims to bridge this gap by combining machine learning, mathematical optimization, and interactive analytics in a single application.
 
 The system predicts potential supply chain disruptions, evaluates alternative actions based on cost and time constraints, and helps users make informed operational decisions.
+
 
 ## Problem Statement
 
