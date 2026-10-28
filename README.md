@@ -10,7 +10,7 @@ SupplyPrescript predicts shipment delays using a Random Forest model and recomme
 
 \- Manual shipment data entry
 
-\- Random Forest delay prediction
+ Random Forest delay prediction
 
 \- FastAPI backend
 
