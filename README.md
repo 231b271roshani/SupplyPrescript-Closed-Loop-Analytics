@@ -1,4 +1,4 @@
-\# SupplyPrescript — Closed-Loop Prescriptive Analytics
+# SupplyPrescript — Closed-Loop Prescriptive Analytics
 
 
 
